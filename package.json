@@ -1,0 +1,14 @@
+{
+  "name": "nave",
+  "version": "1.0.0",
+  "description": "Nave bot command handler new",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nave Twizer",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
