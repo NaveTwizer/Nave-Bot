@@ -8,7 +8,7 @@ const token = config.Token;
 // command handler thanks to CodeLyon on YouTube
 // Video link: https://www.youtube.com/watch?v=AUOb9_aAk7U&t=401s
 // channel link: https://www.youtube.com/channel/UC08G-UJT58SbkdmcOYyOQVw
-// this way each command has it's own file and it's much more organized
+// this way each command has it's own file and it's much more organized UwU
 const fs = require('fs');
 
 client.commands = new Discord.Collection();
@@ -32,27 +32,27 @@ client.on('ready', () => { // this event being fired ONCE the bot comes online
     client.user.setPresence({ // set bot's activity type and custom status
         'status': 'online',
         'activity': {
-           // name: `${serverCount} servers | mention me for help!`,
             type: 'WATCHING',
             name: `${totalMembersCount} users in ${serverCount} servers! | mention me for help!`
+            // watching X users in Y servers! | mention me for help!
         }
     })
 })
 
-client.on('message', async (message) => { // this event being fired every time a bot sees a message
+client.on('message', async (message) => { // this event being fired every time the bot sees a message
     if (!message.guild) return; // skip DM messages 
+    if (!message.guild.me.hasPermission('SEND_MESSAGES')) return; // to not cause errors, delete messages is the minimal perms required.
     if (message.author.bot) return; // skip other bot's messages
     if (message.mentions.has(client.user)) { // if someone mentions the bot in the message
-        message.reply('My prefix for this server is: ``' + prefix + '`` | Use ' + prefix + 'help!');// example: @⚡ Nave ⚡, My prefix for this server is: $ | Use $help!
+        return message.reply('My prefix for this server is: ``' + prefix + '`` | Use ' + prefix + 'help!');// example: @⚡ Nave ⚡, My prefix for this server is: $ | Use $help!
     }
     if (!message.content.startsWith(prefix)) return; // if the message is not related to the bot skip it
-
 
     let args = message.content.slice(prefix.length).trim().split(' '); // array that contains the other words of the message
     let runnedCommand = args.shift().toLowerCase(); // the word that is attached to the prefix ie $coin, runnedCommand will be coin
 
     if (runnedCommand === 'ping') {
-        client.commands.get('ping').execute(message, args, Discord); // call the ping command and send 3 variables, the message, args and Discord (to make embed message)
+        client.commands.get('ping').execute(message, Discord); // call the ping command and send 2 variables, the message, and Discord (to make embed message)
     }
    else if (runnedCommand === 'delete') {
        client.commands.get('delete').execute(message, args); // no need embed message here
@@ -117,6 +117,9 @@ client.on('message', async (message) => { // this event being fired every time a
    else if (runnedCommand === 'help2') {
        client.commands.get('help2').execute(message, Discord); // no need args here
    }
+   else if (runnedCommand === 'say') {
+       client.commands.get('say').execute(message, args); // no need embed here
+   }
    else return; // if command not found just skip it
 });
 
@@ -124,7 +127,7 @@ client.on('message', async (message) => { // this event being fired every time a
 
 
 
-client.on('messageUpdate', async (oldMessage, newMessage) => { // this event being executed when a member edits his message
+client.on('messageUpdate', async (oldMessage, newMessage) => { // this event is being executed when a member edits his message
     if (oldMessage.content === newMessage.content) return;
     let channel = oldMessage.guild.channels.cache.find(channelo => channelo.name === 'message-logs'); // searches for a channel named EXACTLY "messages-logs"
     if (!channel) return; // if there is no channel called message-logs return
@@ -139,6 +142,11 @@ client.on('messageUpdate', async (oldMessage, newMessage) => { // this event bei
     )
     await channel.send(editedEmbed);
 })
+
+
+
+
+
 client.on('guildMemberAdd', async (member) => { // this event is being fired every time a new member joins any server the bot is in
     let channel = member.guild.channels.cache.find(channelo => channelo.name === 'members-logs'); // searhes for a channel named EXACTLY "members-logs"
     if (!channel) return; // if channel does not exist on the server, return
@@ -153,6 +161,10 @@ client.on('guildMemberAdd', async (member) => { // this event is being fired eve
     await channel.send(`Welcome <@${member.id}> to ${member.guild.name}!`);
     channel.send(joinEmbed);
 })
+
+
+
+
 client.on('messageDelete', async (message) => { // this event is being fired every time a message is being deleted
     let channel = message.guild.channels.cache.find(channelo => channelo.name === 'message-logs'); // searches for a channel named EXACTLY "message-logs"
     if (!channel) return; // if channel does not exist on the server, return
