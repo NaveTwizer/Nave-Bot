@@ -21,8 +21,13 @@ module.exports = {
         .setFooter(`Suggestion by ${message.author.tag}`)
         .setTimestamp()
         await channel.send(suggestionEmbed).then(msg => {
-            msg.react('✅');
-            msg.react('❌');
+            if (message.guild.me.hasPermission('ADD_REACTIONS')) { // to make sure the bot can add reactions
+                msg.react('✅');
+                msg.react('❌');
+            }
+            else {
+                // just do nothing
+            }
         });
         message.reply('Your suggestion has been sent to the suggestion channel!');
     }
