@@ -10,7 +10,6 @@ const token = config.Token;
 // channel link: https://www.youtube.com/channel/UC08G-UJT58SbkdmcOYyOQVw
 // this way each command has it's own file and it's much more organized
 const fs = require('fs');
-const { totalmem } = require('os');
 
 client.commands = new Discord.Collection();
 let commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
