@@ -5,7 +5,7 @@ module.exports = {
         let target = message.mentions.users.first();
         let sentence = "";
 
-        if (target) {
+        if (target) { // member wants to DM somebody else
             if (!args[1]) return message.reply('Add message content!');
             for (let i = 1; i < args.length; i++) {
                 sentence += args[i] + ' ';
@@ -13,7 +13,7 @@ module.exports = {
             sentence += `\nThis message was sent by ${message.author}`;
             target.send(sentence)
 
-        }else {
+        }else { // member wants to DM himself
             if (!args[0]) return message.reply('Add message content!');
             for (let i = 0; i < args.length; i++) {
                 sentence += args[i] + ' ';
