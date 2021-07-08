@@ -6,15 +6,15 @@ module.exports = {
         let Count = 0; // role count of the member
         let roleStr = ""; // will be the list of all the user's roles 
 
-        if (target) {
+        if (target) { // user wants to show info about somebody else
             target.roles.cache.forEach(role => {
-                if (role.name === '@everyone') {
+                if (role.name === '@everyone') { // @everyone is considered a role for some reason
                     return;
                 }
                 roleStr += role.name + ', ';
                 Count++;
             });
-            if (Count === 0) roleStr = "None"; // to avoid sending an empty message which will cause an error
+            if (Count === 0) roleStr = "None"; // to avoid sending an empty message which will cause an error, user has no roles
             
             let infoEmbed = new Discord.MessageEmbed()
             .addFields(
@@ -31,7 +31,8 @@ module.exports = {
             .setTimestamp()
             .setThumbnail(target.user.displayAvatarURL({dynamic: true}))
             await message.channel.send(infoEmbed);
-        }else {
+        }
+        else { // user wants to get inf about himself
             message.member.roles.cache.forEach(role => {
                 if (role.name === '@everyone') {
                     return;
