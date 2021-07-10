@@ -1,6 +1,8 @@
 module.exports = {
     name: 'search',
     description: 'Wikipedia search',
+    // install: 
+    // npm i ultrax@latest 
     async execute(message, args) {
         const { Wikipedia } = require('ultrax');
         let query = args.join(' ');
