@@ -3,6 +3,8 @@ const client = new Discord.Client();
 const config = require('./config.json'); // private file that contains the prefix and the token (token is hidden ofc)
 const prefix = config.Prefix;
 const token = config.Token;
+const Cat = require('catcoderboii-discordfunctionality');
+// Credit to Cat from WoC for creating this awesome package
 
 
 // command handler thanks to CodeLyon on YouTube
@@ -12,6 +14,7 @@ const token = config.Token;
 const fs = require('fs');
 
 client.commands = new Discord.Collection();
+
 let commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     let command = require(`./commands/${file}`);
@@ -64,7 +67,7 @@ client.on('message', async (message) => { // this event being fired every time t
        client.commands.get('dm').execute(message, args); // no need Discord because embed message is not needed
    }
    else if (runnedCommand === 'info') {
-       client.commands.get('info').execute(message,args, Discord); // need everything
+       client.commands.get('info').execute(message,args, Discord, Cat); // need everything
    }
    else if (runnedCommand === 'serverinfo') {
        client.commands.get('serverinfo').execute(message, Discord); // no need args here
@@ -73,10 +76,10 @@ client.on('message', async (message) => { // this event being fired every time t
        client.commands.get('pfp').execute(message, args); // no need Discord, no need embed message
    }
    else if (runnedCommand === 'kick') {
-       client.commands.get('kick').execute(message, args); // no need embed message
+       client.commands.get('kick').execute(message, args, Cat); // no need embed message
    }
    else if (runnedCommand === 'ban') {
-       client.commands.get('ban').execute(message, args); // no need embed message
+       client.commands.get('ban').execute(message, args, Cat); // no need embed message
    }
    else if (runnedCommand === 'mute') {
        client.commands.get('mute').execute(message, args); // no need embed message
@@ -120,6 +123,29 @@ client.on('message', async (message) => { // this event being fired every time t
    else if (runnedCommand === 'say') {
        client.commands.get('say').execute(message, args); // no need embed here
    }
+   else if (runnedCommand === 'uwucat') {
+       let uwucat = client.emojis.cache.find(emoji => emoji.name === 'UwuCat');
+       message.channel.send(`${uwucat}`);
+       message.delete();
+   }
+   else if (runnedCommand === 'move') {
+       client.commands.get('move').execute(message, args, Cat);
+   }
+   else if (runnedCommand === 'random') {
+       client.commands.get('random').execute(message, args);
+   }
+   else if (runnedCommand === 'search') {
+       client.commands.get('search').execute(message, args);
+   }
+  /* else if (runnedCommand === 'test2') {
+       let target = message.mentions.members.first();
+
+       let days = Cat.DaysAgo(target.user.createdAt);
+       let years = Math.floor(parseInt(days) / 365);
+       message.reply("years: " + years);
+       message.reply("Days" + parseInt(days) % 365);
+       message.reply('Total days: ' + days);
+   }*/
    else return; // if command not found just skip it
 });
 
