@@ -5,15 +5,20 @@ const prefix = config.Prefix;
 const token = config.Token;
 const Cat = require('catcoderboii-discordfunctionality');
 // Credit to Cat from WoC for creating this awesome package
-
-
+//const ytSearch = require('yt-search');
+const ytdl = require('ytdl-core');
 // command handler thanks to CodeLyon on YouTube
 // Video link: https://www.youtube.com/watch?v=AUOb9_aAk7U&t=401s
 // channel link: https://www.youtube.com/channel/UC08G-UJT58SbkdmcOYyOQVw
 // this way each command has it's own file and it's much more organized UwU
 const fs = require('fs');
 
+const DaysAgo = require('catcoderboii-discordfunctionality/functions/daysAgo');
+const yts = require('yt-search');
+const { doesNotMatch } = require('assert');
+
 client.commands = new Discord.Collection();
+
 
 let commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -24,7 +29,6 @@ for (const file of commandFiles) {
 
 
 client.on('ready', () => { // this event being fired ONCE the bot comes online
-
     let serverCount = 0; // bot servers count
     let totalMembersCount = 0; // shows how much users there are on all of the bot's servers
     client.guilds.cache.forEach(server => {
@@ -36,17 +40,18 @@ client.on('ready', () => { // this event being fired ONCE the bot comes online
         'status': 'online',
         'activity': {
             type: 'WATCHING',
-            name: `${totalMembersCount} users in ${serverCount} servers! | mention me for help!`
-            // watching X users in Y servers! | mention me for help!
+            name: `${totalMembersCount} users in ${serverCount} servers! | mention me for help!`,
+            // Bot's status will look like:  Watching X users in Y servers! | mention me for help!
         }
     })
 })
 
-client.on('message', async (message) => { // this event being fired every time the bot sees a message
+client.on('message', async (message) => { // this event is being fired every time the bot sees a message
     if (!message.guild) return; // skip DM messages 
     if (!message.guild.me.hasPermission('SEND_MESSAGES')) return; // to not cause errors, delete messages is the minimal perms required.
     if (message.author.bot) return; // skip other bot's messages
     if (message.mentions.has(client.user)) { // if someone mentions the bot in the message
+        if (message.mentions.everyone) return; // user was pinging @everyone and not the bot specifically
         return message.reply('My prefix for this server is: ``' + prefix + '`` | Use ' + prefix + 'help!');// example: @⚡ Nave ⚡, My prefix for this server is: $ | Use $help!
     }
     if (!message.content.startsWith(prefix)) return; // if the message is not related to the bot skip it
@@ -112,7 +117,7 @@ client.on('message', async (message) => { // this event being fired every time t
        client.commands.get('deleterole').execute(message, args); // no need Discord, no embed message needed
    }
    else if (runnedCommand === 'help') {
-    client.commands.get('help').execute(message, Discord); // no need args here
+       client.commands.get('help').execute(message,args, Discord); // no need args here
    }
    else if (runnedCommand === 'eval') {
     client.commands.get('eval').execute(message, args); // no need Discord, no embed message needed
@@ -137,15 +142,29 @@ client.on('message', async (message) => { // this event being fired every time t
    else if (runnedCommand === 'search') {
        client.commands.get('search').execute(message, args);
    }
-  /* else if (runnedCommand === 'test2') {
-       let target = message.mentions.members.first();
+   else if (runnedCommand === 'cdelete') {
+       client.commands.get('cdelete').execute(message);
+   }
+   else if (runnedCommand === 'cinfo') {
+       client.commands.get('cinfo').execute(message);
+   }
+   else if (runnedCommand === 'servers') {
+       client.commands.get('servers').execute(message, client);
+   }
+   else if (runnedCommand === 'admins') {
+       client.commands.get('admins').execute(message);
+   }
+   else if (runnedCommand === 'remind') {
+       client.commands.get('remind').execute(message, args);
+   }
+   else if (runnedCommand === 'play') {
+       client.commands.get('play').execute(message, args);
+   }
 
-       let days = Cat.DaysAgo(target.user.createdAt);
-       let years = Math.floor(parseInt(days) / 365);
-       message.reply("years: " + years);
-       message.reply("Days" + parseInt(days) % 365);
-       message.reply('Total days: ' + days);
-   }*/
+   else if (runnedCommand === 'leave') {
+       await message.guild.me.voice.channel.leave();
+       await message.reply('Done!');
+   }
    else return; // if command not found just skip it
 });
 
